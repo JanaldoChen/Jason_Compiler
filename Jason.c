@@ -2,7 +2,6 @@
 
 #include	"scan.h"
 #include	"quad.h"
-#include	"object.h"
 
 
 
@@ -410,7 +409,7 @@ const struct addressrec	func = {opnaddr, tokfloat};
  		which are not a part of the file quad.c */ 
 struct addressrec	getaddress(enum tokentype tokopnd);
 struct addressrec	GenArithQuad(struct addressrec op2,
-			enum optype optor, struct addressrec op3);
+enum optype optor, struct addressrec op3);
 
 /*  Functions used for optimizing intermediate code */
 int		foldconstants(enum optype intopcode, struct addressrec a,
@@ -447,7 +446,6 @@ void	PushRelOp(void);
 void	CalcTerm(void);
 void	CalcExpression(void);
 void	GenAssn(void);
-
 void	EvalCondition(void);
 void	StartIf(void);
 void	StartElse(void);
@@ -491,8 +489,6 @@ int	main(int argc, char *argv[])
 	intpeephole();
 	numcodes = intglobal();
 	printintcode();
-	writeobject(filename, numcodes);
-    dumpsymboltable();
 	return(0);
 }
 

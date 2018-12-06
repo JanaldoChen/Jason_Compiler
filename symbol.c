@@ -605,7 +605,7 @@ void	makelabel(int tabindex, char *label)
                 }
 	  }
 	  strcpy(symtab[tabindex].label, label);
-          printf("Tabindex is %d\n", tabindex);
+          //printf("Tabindex is %d\n", tabindex);
 }
 
 

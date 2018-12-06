@@ -187,8 +187,7 @@ enum tokentype	scannum(char c, int *tabindex, FILE *fp)
 
 	/*Scan until you encounter something that cannot be
 		part of a number or the end of file */
-	for (tokenstring[i++] = c;  (c = gettc(fp)) != EOF && isdigit(c);
-				)
+	for (tokenstring[i++] = c;  (c = gettc(fp)) != EOF && isdigit(c); )
 		tokenstring[i++] = c;
 
         /* Is there a fractional part? */
@@ -213,7 +212,7 @@ enum tokentype	scannum(char c, int *tabindex, FILE *fp)
 		setattrib(stunknown, tokconstant, *tabindex);
 		installdatatype(*tabindex, stliteral, dtreal);
 		rval = atof(tokenstring);
-		printf("*****rval is %f\n*******", rval);
+		//printf("*****rval is %f\n*******", rval);
                 setrvalue(*tabindex, rval);
 		return(tokconstant);
 	}
@@ -222,7 +221,7 @@ enum tokentype	scannum(char c, int *tabindex, FILE *fp)
 		setattrib(stunknown, tokconstant, *tabindex);
 		installdatatype(*tabindex, stliteral, dtinteger);
 		ival = atoi(tokenstring);
-		printf("*****ival is %d\n*******", ival);
+		//printf("*****ival is %d\n*******", ival);
 		setivalue(*tabindex, ival);
 		return(tokconstant);
 	}

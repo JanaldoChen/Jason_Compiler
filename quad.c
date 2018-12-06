@@ -62,7 +62,7 @@ struct addressrec gettempvar(enum datatype otype)
 	 *	with "$_" and then containing a number in sequence
 	 *	as a character string.
 	 */ 
-	strcpy(tempname, "$_");
+	strcpy(tempname, "temp_");
 	//itoa(numtemps++, numtempchar, 10);
     sprintf(numtempchar, "%d", numtemps++);
         strcat(tempname, numtempchar);
@@ -100,7 +100,7 @@ struct addressrec gettemplabel(void)
 	 *	with "!_" and then containing a number in sequence
 	 *	as a character string.
 	 */ 
-	strcpy(tempname, "!_");
+	strcpy(tempname, "label_");
 	//itoa(numtemps++, numtempchar, 10);
     sprintf(numtempchar, "%d", numtemps++);
     strcat(tempname, numtempchar);
