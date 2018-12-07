@@ -30,11 +30,6 @@ int	copyprop(int i, int j);
 int	codeappears(int i, int j);
 void	packcode(void);
 
-/*
- * setaddress() -	Given the operand type and the index to the
- *			attribute table, this function sets the addressrec
- *			structure for this entry.
- */
 struct addressrec	setaddress(enum operandtype otype, int tabindex)
 {
 	struct addressrec	a;
@@ -44,50 +39,26 @@ struct addressrec	setaddress(enum operandtype otype, int tabindex)
 	return(a);
 }
 
-
-/*
- * gettempvar() -	Creates a temporary variable name beginning with
- *			"$_" in numeric sequence.  The variable type depends
- *			on otype, passed as an argument.
- */
 struct addressrec gettempvar(enum datatype otype)
 {
 	struct addressrec	result;
 	char		tempname[10], numtempchar[10];
 	int		tabindex;
 
-
-	/*
-	 *	Create the name of the temporary variable beginning
-	 *	with "$_" and then containing a number in sequence
-	 *	as a character string.
-	 */ 
 	strcpy(tempname, "temp_");
 	//itoa(numtemps++, numtempchar, 10);
     sprintf(numtempchar, "%d", numtemps++);
-        strcat(tempname, numtempchar);
+    strcat(tempname, numtempchar);
 
-	/*	Install the name in the symbol table and give the
-	 *	proper attribute as a variable of the type passed
-	 *	to the function.
-         */
 	installname(tempname, &tabindex);
 	setattrib(stunknown, tokidentifier, tabindex);
 	installdatatype(tabindex, sttempvar, otype);
 
-	/*
-	 *	Return the address of the temporary variable,
-	 *	including its index and that it is a variable.
-         */
 	result.opnd = tabindex;
 	result.opndtype = opntempvar;
 	return(result);
 }
 
-/*
- * gettemplabel() -	Creates a temporary label with its name beginning
- *			with "!_" in numeric sequence.
- */
 struct addressrec gettemplabel(void)
 {
 	struct addressrec	result;
@@ -95,38 +66,21 @@ struct addressrec gettemplabel(void)
 	int		tabindex;
         static int	numtemps = 0;
 
-	/*
-	 *	Create the name of the temporary label beginning
-	 *	with "!_" and then containing a number in sequence
-	 *	as a character string.
-	 */ 
 	strcpy(tempname, "label_");
 	//itoa(numtemps++, numtempchar, 10);
     sprintf(numtempchar, "%d", numtemps++);
     strcat(tempname, numtempchar);
 
-	/*	Install the name in the symbol table and give the
-	 *	proper attribute as a label without a data type. 
-	 */
 	installname(tempname, &tabindex);
 	setattrib(stunknown, tokidentifier, tabindex);
 	installdatatype(tabindex, stlabel, dtnone);
 
-	/*
-	 *	Return the address of the temporary label, 
-	 *	including its index and that it is an address.
-         */
 	result.opnd = tabindex;
 	result.opndtype = opnaddr;
         return(result);
 }
 
 
-/*
- * genquad() -	generates a quadruple using the opcode passed to it and
- *		and three addressreces passed to it, any of which may be
- *		null.		     
- */
 int	genquad(enum optype intopcode, struct addressrec a,
 				struct addressrec b, struct addressrec c)
 {
@@ -139,20 +93,11 @@ int	genquad(enum optype intopcode, struct addressrec a,
 }
 
 
-/*
- * permtarget() -	A "patch" function which replaces the temporary
- *			variable which is the destination of the last
- *			instruction with a permanent user-assigned
- *			variable.
- */
 void permtarget(struct addressrec a)	{
 	intcode[--numcodes-1].op1 = a;
 	--numtemps;
 }
 
-/*
- * getquad() - 	Returns a single instruction in quadruple form
- */
  struct quadtype	getquad(int i)
  {
 	const struct quadtype	nullquad = {opnull, {opnnull, NULL},
@@ -161,20 +106,11 @@ void permtarget(struct addressrec a)	{
  		return(intcode[i]);
  }
 
-/*
- * getnumcodes() -	Returns the number of intermediate code instructions
- */
 int	getnumcodes(void)
 {
 	return(numcodes);
 }
 
-/*
- * intpeephole() -	Performs "peephole" optimization on the
- *			intermediate code generated, replacing identity
- *			arithmetic operations with assignments and
- *			performing reduction in strength optimizations.
- */
 void	intpeephole(void)
 {
 	int	i;
@@ -186,15 +122,8 @@ void	intpeephole(void)
 }
 
 
-/*
- * clearidentities() -	Optimizes the programs by replacing addition
- *			by zero and multiplication by one with assignment
- *			statements and multiplication by zero with
- *			assignment of zero.
- */
 void	clearidentities(int i)
 {
-/*	int	tabindex;*/
 
 	if (addidentity1(i))	{
 		intcode[i].opcode = opassn;
@@ -226,10 +155,6 @@ void	clearidentities(int i)
 }
 
 
-/*
- * reducestrength() -	Performs the reduction by strength optimization
- *			replacing y = 2 * x with y = x + x
- */
 void	reducestrength(int i)
 {
 
@@ -243,10 +168,6 @@ void	reducestrength(int i)
         }
 }
 
-/*
- * addidentity1() -	Returns true if the first operand of addition
- *			is 0,  false if it is any other value.
- */
 int	addidentity1(int i)
 {
 	return((intcode[i].opcode == opadd
@@ -255,10 +176,6 @@ int	addidentity1(int i)
 							: FALSE);
 } 
 
-/*
- * addidentity2() -	Returns true if the second operand of addition
- *			is 0, false if it is any other value.
- */
 int	addidentity2(int i)
 {
 	return(((intcode[i].opcode == opadd || intcode[i].opcode == opsub)
@@ -266,11 +183,6 @@ int	addidentity2(int i)
 		&& getvalue(intcode[i].op3.opnd) == 0)? TRUE : FALSE);
 }
 
-/*
- * multidentity1() -	Returns true if the first operand of
- *			multiplication is 1,
- *			false if it is any other value.
- */
 int	multidentity1(int i)
 {
 	return((intcode[i].opcode == opmult
@@ -279,11 +191,6 @@ int	multidentity1(int i)
 							: FALSE);
 }
 
-/*
- * multidentity2() -	Returns true if the second operand of
- *			multiplication is 1,
- *			false if it is any other value.
- */
 int	multidentity2(int i)
 {
 	return(((intcode[i].opcode == opmult || intcode[i].opcode == opdiv)
@@ -292,11 +199,6 @@ int	multidentity2(int i)
 							: FALSE);
 }
 
-/*
- * zeromult1() -	Returns true if the first operand of
- *			multiplication is 0,
- *			false if it is any other value.
- */
 int	zeromult1(int i)
 {
 	return(((intcode[i].opcode == opmult || intcode[i].opcode == opdiv)
@@ -305,11 +207,6 @@ int	zeromult1(int i)
 							: FALSE);
 }
 
-/*
- * zeromult2() -	Returns true if the second operand of
- *			multiplication is 0,
- *			false if it is any other value.
- */
 int	zeromult2(int i)
 {
         return((intcode[i].opcode == opmult
@@ -318,11 +215,6 @@ int	zeromult2(int i)
 							 : FALSE);
 }
 
-/*
- * twotimes() -	Returns true if the first operand of
- *			multiplication is 2,
- *			false if it is any other value.
- */
 int	twotimes(int i)
 {
 	return((intcode[i].opcode == opmult
@@ -331,11 +223,6 @@ int	twotimes(int i)
 							 : FALSE);
 }
 
-/*
- * times2() -	Returns true if the second operand of
- *			multiplication is 2,
- *			false if it is any other value.
- */
 int	times2(int i)
 {
 	return((intcode[i].opcode == opmult
@@ -344,10 +231,6 @@ int	times2(int i)
 							 : FALSE);
 }
 
-/*
- * getvalue() -	Gets the values stored at a particular entry in the
- *		attribute table, converting it to float if it is integer.
- */
 float	getvalue(int	tabindex)
 {
 	if (data_class(tabindex) == dtinteger)
@@ -356,24 +239,11 @@ float	getvalue(int	tabindex)
 		return(getrvalue(tabindex));       
 }
 
-/*
- * intglobal() -	Performs "global" optmizations.
- *			First eliminates copy propagation of temporary
- *			variables in all the basic blocks.
- *			Then eliminates temporary variables that are
- *			assigned values but are never used.
- *			Lastly, it packs the intermediate code,
- *			eliminating the null instructions created in
- *			these first two operations.
- */
 int	intglobal(void)
 {
 	int	i, j, tempused, tempcopied;
 
 	for (i = 0;  i < numcodes;  i++)
-		/*  If a temporary variable is assigned a value,
-			eliminate copy propagation with the
-                        basic block.  */
 		if (intcode[i].opcode == opassn
 			&& symclass(intcode[i].op1.opnd) == sttempvar)	{
 			tempcopied = 0;
@@ -391,8 +261,6 @@ int	intglobal(void)
                 }
 
 	for (i = 0;  i < numcodes;  i++)
-		/*  If a temporary variable is assigned a value that
-                	is never used, eliminate the instruction */
 		if (intcode[i].opcode == opassn
 			&& symclass(intcode[i].op1.opnd) == sttempvar)	{
         		tempused = 0;
@@ -406,23 +274,11 @@ int	intglobal(void)
 	return(numcodes);
 }
 
-/*
- * insamebb() -	Returns true if the intermediate instruction is not
- *		one that indicates the beginning of the
- *		next basic block, returns false if it is.    
- */
 int	insamebb(int j)
 {
 	return(intcode[j].opcode < opjump);
 }
 
-/*
- * copyprop() - If intermediate instructions i and j are an example of
- *		copy propagation, it returns 1 for the second operand
- *		and 2 for the third operand so the global optmizing
- *		function knows which operand to replace;
- *		otherwise it returns 0.
- */
 int	copyprop(int i, int j)
 {
 	if (intcode[i].op1.opnd == intcode[j].op2.opnd)
@@ -433,11 +289,6 @@ int	copyprop(int i, int j)
         	return(0);
 }
 
-/*
- * codeappears() -	Returns true if the temporary variable set in
- *			intermediate instruction i is used in intermediate
- *			instruction j. 
- */
 int	codeappears(int i, int j)
 {
 	return(intcode[j].op1.opnd == intcode[i].op1.opnd
@@ -445,11 +296,6 @@ int	codeappears(int i, int j)
 		|| intcode[j].op3.opnd == intcode[i].op1.opnd);
 }
 
-/*
- * packcode() - "Packs" the intermediate code, eliminating the
- *		null instructions created when eliminating copy
- *		propagation and unused temporary variables.
- */
 void	packcode(void)
 {
 	int	i, j;
@@ -460,11 +306,6 @@ void	packcode(void)
         numcodes = j;
 }
 
-/*
- * printintcode() -	Prints the intermediate code program in a form
- *			that users can understand more easily than
- *			intermediate representation.  
- */
 void	printintcode(void)
 {
 	int	i;
@@ -475,8 +316,6 @@ void	printintcode(void)
         	printf("%d\t", i);
 		switch (intcode[i].opcode)	{
 		case opadd: case opsub: case opmult: case opdiv:
-		/* Print these operations in the form of
-				an assignment statement */
 			putchar('\t');
 			printlexeme(intcode[i].op1.opnd);
 			printf(" := ");
@@ -487,7 +326,6 @@ void	printintcode(void)
 			break;
 
 		case opassn:
-                 	/* Print this in the form a := b */
                 	putchar('\t');
 			printlexeme(intcode[i].op1.opnd);
 			printf(" := ");
@@ -497,8 +335,6 @@ void	printintcode(void)
 
 		case opifposzjump: case opifnegzjump: case opifzjump:
 		case opifnzjump:
-			/* Print these in the form
-                        	if condition  then goto address */
                 	putchar('\t');
 			printf("if ");
 			printlexeme(intcode[i].op1.opnd);
@@ -514,15 +350,11 @@ void	printintcode(void)
 			break;
 
 		case oplabel:
-			/* Print this in the form
-                        	Label:			*/
 			printlexeme(intcode[i].op1.opnd);
 			printf(":\n");
 			break;
 
 		case opfunc:
-			/* Print this in the form
-                        	x := f(y)	*/
                 	putchar('\t');
 			printlexeme(intcode[i].op1.opnd);
 			printf(" := ");
@@ -533,8 +365,6 @@ void	printintcode(void)
 			break;
 
 		default:
-			/* Print these in the form
-                        	opcode op1 op2 op3 */
 			putchar('\t');			                		
 			printf("%s ", opchar[intcode[i].opcode]);
 			if (intcode[i].op1.opndtype != opnnull)	{
@@ -552,16 +382,11 @@ void	printintcode(void)
 			putchar('\n');
 		}
 
-                /* Pause every tenth line */
 		if (i%10 == 9)
 			getchar();
         }
 }
 
-/*
- * printintcode2() -	Prints the intermediate code program in a form
- *			that facilitates debugging.
- */
 void	printintcode2(void)
 {
 	int	i;
@@ -573,18 +398,12 @@ void	printintcode2(void)
 
 }
 
-/*
- * printquad() -	Prints the quadruple instruction indicated by
- *			number.  Used for debugging purposes.
- */
 void	printquad(int i)
 {
 
        	printf("%d\t", i);
 	switch (intcode[i].opcode)	{
 	case opadd: case opsub: case opmult: case opdiv:
-	/* Print these operations in the form of
-			an assignment statement */
 		putchar('\t');
 		printlexeme(intcode[i].op1.opnd);
 		printf(" := ");
@@ -595,8 +414,7 @@ void	printquad(int i)
 		break;
 
 	case opassn:
-               	/* Print this in the form a := b */
-               	putchar('\t');
+        putchar('\t');
 		printlexeme(intcode[i].op1.opnd);
 		printf(" := ");
 		printlexeme(intcode[i].op2.opnd);
@@ -605,9 +423,7 @@ void	printquad(int i)
 
 	case opifposzjump: case opifnegzjump: case opifzjump:
 	case opifnzjump:
-		/* Print these in the form
-                       	if condition  then goto address */
-               	putchar('\t');
+        putchar('\t');
 		printf("if ");
 		printlexeme(intcode[i].op1.opnd);
 		switch(intcode[i].opcode)	{
@@ -622,16 +438,12 @@ void	printquad(int i)
 		break;
 
 	case oplabel:
-		/* Print this in the form
-                       	Label:			*/
 		printlexeme(intcode[i].op1.opnd);
 		printf(":\n");
 		break;
 
 	case opfunc:
-		/* Print this in the form
-                       	x := f(y)	*/
-               	putchar('\t');
+        putchar('\t');
 		printlexeme(intcode[i].op1.opnd);
 		printf(" := ");
 		printlexeme(intcode[i].op2.opnd);
@@ -641,8 +453,6 @@ void	printquad(int i)
 		break;
 
 	default:
-		/* Print these in the form
-                       	opcode op1 op2 op3 */
 		putchar('\t');			                		
 		printf("%s ", opchar[intcode[i].opcode]);
 		if (intcode[i].op1.opndtype != opnnull)	{

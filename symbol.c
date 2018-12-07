@@ -2,10 +2,6 @@
 #include  "symbol.h"
 #define min(x, y) ((x)<(y)?(x):(y))
 
-/*
- * The names of the token classes in a format that can
- * be printed in a symbol table dump
- */
 char *tokclstring[] = {    "begin     ", "call      ",
           "declare   ", "do        ", "else      ", "end       ",
           "endif     ", "enduntil  ", "endwhile  ", "if        ",
@@ -30,12 +26,6 @@ char *datatypestring[] = {"unknown","none   ", "program",
                     "proced.", "integer", "real   "
 };
 
-
-
-/*
- * The key words and operators - used in initializing the symbol
-table
- */
 char *keystring[/*NUMTOKENS*/] = {"begin", "call", "declare",
           "do", "else", "end", "endif", "enduntil", "endwhile",
           "if", "integer", "parameters", "procedure", "program",
@@ -60,9 +50,6 @@ void      LexemeInCaps(int tabindex);
 int       hashcode(char string[], int length);
 void	makelabel(int tabindex, char *label);
 
-/*
- * InitializeSymTab() -  Initializes the symbol table.
- */
 void initializesymtab(void)
 {
      int  i, nameindex;
@@ -70,8 +57,6 @@ void initializesymtab(void)
      initprocstack();
      thisproc = initprocentry(-1);
 
-     /* initialize the hash table, the name table's next 
-          field and the attribute table's fields as -1.  */
      for  (i = 0; i < HASHTABLESIZE;  i++)
           hashtab[i] = -1;
 
@@ -90,15 +75,11 @@ void initializesymtab(void)
           symtab[i].label[0] = '\0';
      }
 
-     /* Install the keywords in the name table and
-               set their attributes to keyword */
      for  (i = 0;  i < NUMKEYWORDS;  i++)    {
           installname(keystring[i], &nameindex);
           setattrib(stkeyword, i, nameindex);
      }
 
-     /* Install the operators in the name table and
-               set their attributes to operator */
      for  (i = NUMKEYWORDS; i < NUMTOKENS;  i++)  {
           installname(keystring[i],&nameindex);
           setattrib(stoperator, i, nameindex);
@@ -111,10 +92,6 @@ void initializesymtab(void)
      printf("all initiallized\n");
 }
 
-/*
- * DumpSymbolTable() -   Prints out the basic symbol table
- *             information, including the name and token class
- */
 void dumpsymboltable(void)
 {
      int  i, j;
@@ -133,11 +110,6 @@ void dumpsymboltable(void)
           printf("%5d\t",i);
           printlexeme(i);
 
-	  /*
-           *   After printing the lexeme, move to column 20.  If
-	   *   the name is too long to permit, go to the next
-           *   line
-           */
           if (nametable[symtab[i].thisname].strlength < 11)
                for (j = 0;
                          j < 11
@@ -147,7 +119,6 @@ void dumpsymboltable(void)
           else
                printf("\n          ");                           
 
-          /* Print the token class, symbol type and data type */
           printf("%s  ",tokclstring[symtab[i].tok_class]);
 
           printf("%s  ", symtypestring[symtab[i].symtype]);
@@ -205,21 +176,10 @@ void dumpsymboltable2(void)
 }
 
 
-
-/*
- * InstallName() -  Check if the name is already in the table.
- *             If not add it to the name table and create an
- *             attribute table entry.  
- */
 enum boolean installname(char string[], int *tabindex)
 {
      int  i, code, lastcode, length, nameindex;
 
-     /*
-      * Use the function ispresent to see if the token string
-      * is in the table.  If so, return a pointer to its
-      * attribute table entry.
-      */
      length = strlen(string);
      if (ispresent(string, length, &code, &nameindex)) {
           if (nametable[nameindex].symtabptr == -1)    {
@@ -231,14 +191,7 @@ enum boolean installname(char string[], int *tabindex)
                return(YES);
           }
      }
-
-     /*
-      * If not create entries in the name table, copy the name
-      * into the string table and create a hash table entry
-      * (linking it to its previous entry if necessary) and
-      * create an entry in the attribute table with the
-      * bare essentials.
-         */
+    
      nametable[nameindex = namtablen++].strstart = strtablen;
      nametable[nameindex].strlength = length;
 
@@ -265,32 +218,15 @@ int  installattrib(int nameindex)
      return(tabindex);
 }
 
-/*
- * IsPresent() -    After finding the hash value, it traces
- *             through the hash list, link by link looking to see
- *             if the current token string is there.
- */
 enum boolean   ispresent(char string[], int length, int *code,
                                    int *nameindex)
 {
      int  found = NO, oldnameindex, j, k;
 
-        /* Initialize the old name's index to -1; 
-                                   it may not be there */
      oldnameindex = -1;
 
-     /* Find the hash value */
      *code = hashcode(string, length);
 
-     /*
-      * Starting with the entry in the hash table, trace through
-      * the name table's link list for that hash value.  The
-      * inner loop
-      * look to see if this name matches the one that we're
-      * looking for.
-      * Since this is part of a long string, strcmp cannot be
-      * used.
-      */
      for  (*nameindex = hashtab[*code];
                     !found && *nameindex != -1;
                oldnameindex = *nameindex,
@@ -303,20 +239,12 @@ enum boolean   ispresent(char string[], int length, int *code,
                found = YES;
 
      }
-
-        /* If it's there, we actually went right past it. */
      if (found)     
           *nameindex = oldnameindex;
 
      return(found);
 }
 
-
-/*
- * HashCode() -     A hashing function which uses the characters
- *        from the end of the token string.  The algorithm comes
- *        from Matthew Smosna of NYU.    
- */
 int  hashcode(char string[], int length)
 {
      int       i, numshifts, startchar;
@@ -332,10 +260,6 @@ int  hashcode(char string[], int length)
      return(code % HASHTABLESIZE);
 }
 
-/*
- * SetAttrib() -    Set attribute table information, given
- *             a pointer to the correct entry in the table.
- */
 void setattrib(int symbol, int token, int tabindex)
 {
      symtab[tabindex].symtype = symbol;
@@ -416,10 +340,6 @@ void installdatatype(int tabindex, enum symboltype stype,
      symtab[tabindex].dataclass = dclass;
 }
 
-/*
- * TokenClass() -   Return the token class, given the pointer to
- *             the attribute table entry.            
- */
 enum tokentype tokenclass(int tabindex)
 {
      return(symtab[tabindex].tok_class);
@@ -474,18 +394,11 @@ int  getproc(int tabindex)
      return(symtab[tabindex].owningprocedure);
 }
 
-/*
- * PrintToken() - Print the token class's name given the token
- *                  class.
- */
 void printtoken(int i)
 {
      printf("%s", tokclstring[i]);
 }
 
-/*
- * PrintLexeme() - Print the lexeme for a given token
- */
 void printlexeme(int tabindex)
 {
 	int  i, j;
@@ -498,9 +411,6 @@ void printlexeme(int tabindex)
 	putchar(stringtable[j]);
 }
 
-/*
- * PrintLexeme() - Print the lexeme for a given token
- */
 void fprintlexeme(FILE *ptr, int tabindex)
 {
  	int  i, j;
@@ -515,9 +425,6 @@ void fprintlexeme(FILE *ptr, int tabindex)
 	putc(stringtable[j], ptr);
 }
 
-/*
- * LexemeInCaps() - Print the lexeme for a given token
- */
 void LexemeInCaps(int tabindex)
 {
 	int  i, j;
@@ -530,11 +437,6 @@ void LexemeInCaps(int tabindex)
 		putchar(toupper(stringtable[j]));
 }
 
-/*
- * getlabel() -		Gets a label which is used by the final code
- *			generator.  If the label is not installed in the
- *			symbol table, it creates one and returns it.
- */
 void	getlabel(int tabindex, char *varlabel)
 {
 	if (symtab[tabindex].label[0] != '\0')
@@ -543,20 +445,12 @@ void	getlabel(int tabindex, char *varlabel)
         	makelabel(tabindex, varlabel);
 }
 
-/*
- * makelabel() -	Makes a label which is used by the final code
- *			generator and installs it in the symbol table.
- */
 void	makelabel(int tabindex, char *label)
 {
 	int		i, j, k, m, n, ivalue;
         float		fvalue;
 	char		indexstr[5];
 	enum symboltype thissymbol;
-
-//    printf("in makelabel, ");
-//    printlexeme(tabindex);
-//    printf(" is it\n");
     label[0] = '\0';
 	switch (symclass(tabindex))	{
 	  case stliteral:
@@ -605,7 +499,6 @@ void	makelabel(int tabindex, char *label)
                 }
 	  }
 	  strcpy(symtab[tabindex].label, label);
-          //printf("Tabindex is %d\n", tabindex);
 }
 
 
@@ -641,11 +534,6 @@ int	tablesize(void)
 
 procstack      ps;
 
-/*
- *  ProcPop() -     Remove the top element from the Procedure
- *        Stack and return it.
- *        Precondition: the stack is not empty.
- */
 procstackitem  procpop(void)
 {
      if (procempty())    {
@@ -656,11 +544,6 @@ procstackitem  procpop(void)
      return(ps.item[--ps.top]);
 }
 
-/*
- * ProcPush() -     Place the item given as an argument onto the
- *        top of the Procedure Stack.
- *        Precondition: the stack is not full
- */
 void procpush(procstackitem x)
 {
      if (ps.top == MAXSTACK)  {
@@ -670,18 +553,11 @@ void procpush(procstackitem x)
      ps.item[ps.top++] = x;
 }
 
-/*
- * Empty() -   Returns True if the stack is empty,
- *        False if it is not empty.
- */
 enum logical    procempty()
 {
      return(ps.top == 0);
 }
 
-/*
- * Initstack() -    Initialize the stack by setting top to zero.
- */
 void initprocstack(void)
 {
      ps.top = 0;

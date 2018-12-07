@@ -1,6 +1,3 @@
-/*
-scan.h - last revised 2/13/97
-*/
 #define		FILENAMELENGTH		40
 #define		TOKENSTRINGLENGTH	40
 

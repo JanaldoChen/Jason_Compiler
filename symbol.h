@@ -103,7 +103,6 @@ void	getlabel(int tabindex, char *label);
 void	paramlabel(int tabindex, char *label, int *bytecount);
 int	tablesize(void);
 
-/* The declarations necessary for the procedure stack */
 enum logical        {false, true};
 
 #define        MAXSTACK  100
