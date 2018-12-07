@@ -1,8 +1,9 @@
 #include	"quad.h"
 
-#define		INTCODESIZE		200
-#define		TRUE			1
-#define		FALSE			0
+#define	INTCODESIZE	200
+#define	TRUE 1
+#define	FALSE 0
+#define Null 0
 
 char	*opchar[] = {"<null>", "+", "-", "-", "*", "/", "=", "arg", "goto",
 			 "ifposz", "ifpos", "ifnegz", "ifneg", "ifz",
@@ -10,12 +11,12 @@ char	*opchar[] = {"<null>", "+", "-", "-", "*", "/", "=", "arg", "goto",
 			 "write", "return"
 };
 
-const struct addressrec	noop = {opnnull, NULL};
+const struct addressrec	noop = {opnnull, Null};
 struct quadtype	intcode[INTCODESIZE];
 int		numcodes = 0, numtemps = 0;
 
-void	clearidentities(int i);
-void	reducestrength(int i);
+void clearidentities(int i);
+void reducestrength(int i);
 int	addidentity1(int i);
 int	addidentity2(int i);
 int	multidentity1(int i);
@@ -30,10 +31,9 @@ int	copyprop(int i, int j);
 int	codeappears(int i, int j);
 void	packcode(void);
 
-struct addressrec	setaddress(enum operandtype otype, int tabindex)
+struct addressrec setaddress(enum operandtype otype, int tabindex)
 {
-	struct addressrec	a;
-
+	struct addressrec a;
 	a.opndtype = otype;
 	a.opnd = tabindex;
 	return(a);
@@ -42,11 +42,10 @@ struct addressrec	setaddress(enum operandtype otype, int tabindex)
 struct addressrec gettempvar(enum datatype otype)
 {
 	struct addressrec	result;
-	char		tempname[10], numtempchar[10];
-	int		tabindex;
+	char tempname[10], numtempchar[10];
+	int	tabindex;
 
 	strcpy(tempname, "temp_");
-	//itoa(numtemps++, numtempchar, 10);
     sprintf(numtempchar, "%d", numtemps++);
     strcat(tempname, numtempchar);
 
@@ -62,9 +61,9 @@ struct addressrec gettempvar(enum datatype otype)
 struct addressrec gettemplabel(void)
 {
 	struct addressrec	result;
-	char		tempname[10], numtempchar[10];
-	int		tabindex;
-        static int	numtemps = 0;
+	char tempname[10], numtempchar[10];
+	int	tabindex;
+    static int	numtemps = 0;
 
 	strcpy(tempname, "label_");
 	//itoa(numtemps++, numtempchar, 10);
@@ -80,7 +79,6 @@ struct addressrec gettemplabel(void)
         return(result);
 }
 
-
 int	genquad(enum optype intopcode, struct addressrec a,
 				struct addressrec b, struct addressrec c)
 {
@@ -92,18 +90,18 @@ int	genquad(enum optype intopcode, struct addressrec a,
 	return(numcodes-1);
 }
 
-
 void permtarget(struct addressrec a)	{
 	intcode[--numcodes-1].op1 = a;
 	--numtemps;
 }
 
- struct quadtype	getquad(int i)
+ struct quadtype getquad(int i)
  {
-	const struct quadtype	nullquad = {opnull, {opnnull, NULL},
-					{opnnull, NULL}, { opnnull, NULL}};
+	const struct quadtype nullquad = {opnull, {opnnull, Null},
+					{opnnull, Null}, { opnnull, Null}};
  	if (i < numcodes)
  		return(intcode[i]);
+    return(nullquad);
  }
 
 int	getnumcodes(void)
@@ -117,10 +115,9 @@ void	intpeephole(void)
 
 	for	(i = 0;  i < numcodes;  i++)	{
 		clearidentities(i);
-                reducestrength(i);
+        reducestrength(i);
 	}
 }
-
 
 void	clearidentities(int i)
 {
@@ -153,7 +150,6 @@ void	clearidentities(int i)
                 intcode[i].op3 = noop;
         }
 }
-
 
 void	reducestrength(int i)
 {
@@ -310,8 +306,6 @@ void	printintcode(void)
 {
 	int	i;
 
-
-
 	for  (i = 0; i < numcodes; i++)	{
         	printf("%d\t", i);
 		switch (intcode[i].opcode)	{
@@ -326,7 +320,7 @@ void	printintcode(void)
 			break;
 
 		case opassn:
-                	putchar('\t');
+            putchar('\t');
 			printlexeme(intcode[i].op1.opnd);
 			printf(" := ");
 			printlexeme(intcode[i].op2.opnd);
@@ -339,10 +333,11 @@ void	printintcode(void)
 			printf("if ");
 			printlexeme(intcode[i].op1.opnd);
 			switch(intcode[i].opcode)	{
-			case opifposzjump:	printf(" >="); break;
-			case opifnegzjump:	printf(" <="); break;
-			case opifnzjump:	printf(" <>"); break;
-			case opifzjump:		printf(" ="); break;
+                case opifposzjump:	printf(" >="); break;
+                case opifnegzjump:	printf(" <="); break;
+                case opifnzjump:	printf(" <>"); break;
+                case opifzjump:		printf(" ="); break;
+                default: break;
 			}
 			printf(" 0 goto ");
 			printlexeme(intcode[i].op2.opnd);
@@ -390,12 +385,33 @@ void	printintcode(void)
 void	printintcode2(void)
 {
 	int	i;
-	for (i = 0;  i < numcodes;  i++)
-		printf("%d\t%d  %d\t%d  %d\t%d  %d\n",intcode[i].opcode,
-		intcode[i].op1.opnd, intcode[i].op1.opndtype,
-		intcode[i].op2.opnd, intcode[i].op2.opndtype,
-		intcode[i].op3.opnd, intcode[i].op3.opndtype);
-
+    for(i = 0; i < numcodes; i++) {
+        printf("%d\t", i);
+        printf("<%s, ", opchar[intcode[i].opcode]);
+        if (intcode[i].op1.opndtype != opnnull)    {
+            printlexeme(intcode[i].op1.opnd);
+            putchar(',');
+        }
+        else {
+            printf("_,");
+        }
+        
+        if (intcode[i].op2.opndtype != opnnull)    {
+            printlexeme(intcode[i].op2.opnd);
+            putchar(',');
+        }
+        else {
+            printf("_,");
+        }
+        
+        if (intcode[i].op3.opndtype != opnnull)
+            printlexeme(intcode[i].op3.opnd);
+        else {
+            printf("_,");
+        }
+        printf(">\n");
+    }
+    
 }
 
 void	printquad(int i)
@@ -414,7 +430,7 @@ void	printquad(int i)
 		break;
 
 	case opassn:
-        putchar('\t');
+               	putchar('\t');
 		printlexeme(intcode[i].op1.opnd);
 		printf(" := ");
 		printlexeme(intcode[i].op2.opnd);
@@ -423,14 +439,15 @@ void	printquad(int i)
 
 	case opifposzjump: case opifnegzjump: case opifzjump:
 	case opifnzjump:
-        putchar('\t');
+               	putchar('\t');
 		printf("if ");
 		printlexeme(intcode[i].op1.opnd);
 		switch(intcode[i].opcode)	{
-		case opifposzjump:	printf(" >="); break;
-		case opifnegzjump:	printf(" <="); break;
-		case opifnzjump:	printf(" <>"); break;
-		case opifzjump:		printf(" ="); break;
+            case opifposzjump:	printf(" >="); break;
+            case opifnegzjump:	printf(" <="); break;
+            case opifnzjump:	printf(" <>"); break;
+            case opifzjump:		printf(" ="); break;
+            default: break;
 		}
 		printf(" 0 goto ");
 		printlexeme(intcode[i].op2.opnd);
@@ -443,7 +460,7 @@ void	printquad(int i)
 		break;
 
 	case opfunc:
-        putchar('\t');
+               	putchar('\t');
 		printlexeme(intcode[i].op1.opnd);
 		printf(" := ");
 		printlexeme(intcode[i].op2.opnd);
@@ -475,9 +492,6 @@ void	printquad(int i)
 int	getprogstart(void)
 {
 	int	i;
-
-	for  (i = 0;  intcode[i].opcode != oplabel
-			|| intcode[i].op1.opnd != NUMTOKENS+1; i++)
-		;
+	for (i = 0;  intcode[i].opcode != oplabel || intcode[i].op1.opnd != NUMTOKENS+1; i++);
 	return(i+1);
 }

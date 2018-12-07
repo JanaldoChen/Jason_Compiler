@@ -7,8 +7,7 @@ enum optype	{opnull,opadd, opsub, opneg, opmult, opdiv, opassn,
 		opproc,	opread, opwrite, opreturn
 };
 
-
-enum operandtype	{opnvar, opntempvar, opnconst, opnaddr, opnnull };
+enum operandtype {opnvar, opntempvar, opnconst, opnaddr, opnnull };
 
 struct addressrec	{
 	enum operandtype opndtype;
@@ -16,8 +15,8 @@ struct addressrec	{
 };
 
 struct quadtype	{
-	enum optype	opcode;
-	struct addressrec op1, op2, op3;
+	enum optype		opcode;
+	struct addressrec	op1, op2, op3;
 };
 
 
@@ -28,12 +27,13 @@ struct addressrec 	gettemplabel(void);
 int		genquad(enum optype intopcode, struct addressrec a,
 				struct addressrec b, struct addressrec c);
 
-void permtarget(struct addressrec a);
-void printintcode(void);
-void permtarget(struct addressrec a);
-void printquad(int i);
+void		permtarget(struct addressrec a);
+void		printintcode(void);
+void        printintcode2(void);
+void 		permtarget(struct addressrec a);
+void		printquad(int i);
 struct quadtype	getquad(int i);
-void intpeephole(void);
-int	intglobal(void);
-int	getprogstart(void);
-int	getnumcodes(void);
+void		intpeephole(void);
+int		intglobal(void);
+int		getprogstart(void);
+int		getnumcodes(void);

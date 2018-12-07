@@ -2,23 +2,23 @@
 #include  <stdlib.h>
 #include  <string.h>
 
-#define		TABSTOP		8
+#define	TABSTOP		8
 
-#define		TABLESIZE	200
-#define		HASHTABLESIZE	100
-#define		STRINGTABLESIZE 1200
-#define		SYMTABLESIZE  	200
+#define	TABLESIZE	200
+#define	HASHTABLESIZE	100
+#define	STRINGTABLESIZE 1200
+#define	SYMTABLESIZE  	200
 
-#define		MAXLINE        	121
-#define   	NUMKEYWORDS    	21
-#define		NUMTOKENS	34
+#define	MAXLINE        	121
+#define NUMKEYWORDS    	21
+#define	NUMTOKENS	34
 
-#define		LABELSIZE	10
+#define	LABELSIZE	10
 
-enum boolean   {NO, YES};
 
-enum tokentype {tokbegin, tokcall, tokdeclare, tokdo, tokelse,
-tokend,
+enum boolean {NO, YES};
+
+enum tokentype {tokbegin, tokcall, tokdeclare, tokdo, tokelse, tokend,
           tokendif, tokenduntil,  tokendwhile, tokif, tokinteger,
           tokparameters, tokprocedure, tokprogram, tokread,
           tokreal, tokset, tokthen, tokuntil, tokwhile, tokwrite,
@@ -28,10 +28,7 @@ tokend,
           tokidentifier, tokconstant, tokerror, tokeof
 };
 
-
-
-
-enum symboltype     {stunknown, stkeyword, stprogram,
+enum symboltype {stunknown, stkeyword, stprogram,
 	  stparameter, stvariable, sttempvar,
           stconstant, stenum, ststruct, stunion, stprocedure,
           stfunction, stlabel, stliteral, stoperator
@@ -42,22 +39,21 @@ enum datatype  {dtunknown, dtnone, dtprogram, dtprocedure,
 };
 
 struct nametabtype  {
-     int       strstart;
-     int       strlength;
-     int       symtabptr;
-     int       nextname;
+     int strstart;
+     int strlength;
+     int symtabptr;
+     int nextname;
 }; 
-
 
 enum tagtype   {tint, treal};
 union valtype  {
-     int  ival;
-     float     rval;
+     int ival;
+     float rval;
 };
 
 struct valrec  {
-     enum tagtype   tag;
-     union valtype  val;
+     enum tagtype tag;
+     union valtype val;
 };
 
 struct symtabtype   {
@@ -101,7 +97,7 @@ void    setproc(int thisproc, int tabindex);
 int     getproc(int tabindex);
 void	getlabel(int tabindex, char *label);
 void	paramlabel(int tabindex, char *label, int *bytecount);
-int	tablesize(void);
+int	    tablesize(void);
 
 enum logical        {false, true};
 
@@ -121,6 +117,4 @@ procstackitem  procpop(void);
 void           procpush(procstackitem x);
 enum logical   procempty(void);
 void           initprocstack(void);
-
-
 procstackitem  initprocentry(int tabindex);

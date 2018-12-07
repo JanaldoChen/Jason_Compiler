@@ -3,42 +3,40 @@
 #define min(x, y) ((x)<(y)?(x):(y))
 
 char *tokclstring[] = {    "begin     ", "call      ",
-          "declare   ", "do        ", "else      ", "end       ",
-          "endif     ", "enduntil  ", "endwhile  ", "if        ",
-          "integer   ", "parameters", "procedure ", "program   ",
-          "read      ", "real      ", "set       ", "then      ",
-          "until     ", "while     ", "write     ", "star      ",
-          "plus      ", "minus     ", "slash     ", "equals    ",
-          "semicolon ", "comma     ", "period    ", "greater   ",
-          "less      ", "notequal  ", "openparen ", "closeparen",
-           "float     ","identifier", "constant  ", "error     ",
-          "eof       "
+    "declare   ", "do        ", "else      ", "end       ",
+    "endif     ", "enduntil  ", "endwhile  ", "if        ",
+    "integer   ", "parameters", "procedure ", "program   ",
+    "read      ", "real      ", "set       ", "then      ",
+    "until     ", "while     ", "write     ", "star      ",
+    "plus      ", "minus     ", "slash     ", "equals    ",
+    "semicolon ", "comma     ", "period    ", "greater   ",
+    "less      ", "notequal  ", "openparen ", "closeparen",
+    "float     ", "identifier", "constant  ", "error     ",
+    "eof       "
 };
 
 char *symtypestring[] =  {"unknown  ", "keyword  ", "program  ",
-		    "parameter", "variable ", "temp. var",
-		    "constant ", "enum     ", "struct   ",
-		    "union    ", "procedure", "function ",
-		    "label    ", "literal  ", "operator "
+    "parameter", "variable ", "temp. var",
+    "constant ", "enum     ", "struct   ",
+    "union    ", "procedure", "function ",
+    "label    ", "literal  ", "operator "
 };
 
 char *datatypestring[] = {"unknown","none   ", "program",
-                    "proced.", "integer", "real   "
+    "proced.", "integer", "real   "
 };
 
 char *keystring[/*NUMTOKENS*/] = {"begin", "call", "declare",
-          "do", "else", "end", "endif", "enduntil", "endwhile",
-          "if", "integer", "parameters", "procedure", "program",
-          "read", "real", "set", "then", "until", "while",
-          "write", "*", "+", "-", "/", "=", ";",
-          ",", ".", ">", "<", "!", "(", ")", "_float"
+    "do", "else", "end", "endif", "enduntil", "endwhile",
+    "if", "integer", "parameters", "procedure", "program",
+    "read", "real", "set", "then", "until", "while",
+    "write", "*", "+", "-", "/", "=", ";",
+    ",", ".", ">", "<", "!", "(", ")", "_float"
 };
 
 char stringtable[STRINGTABLESIZE];
-
-
-struct nametabtype  nametable[TABLESIZE];
-struct symtabtype   symtab[SYMTABLESIZE];
+struct nametabtype nametable[TABLESIZE];
+struct symtabtype symtab[SYMTABLESIZE];
 
 int  hashtab[HASHTABLESIZE];
 int  strtablen, namtablen, symtablen, auxtablen;
@@ -75,11 +73,15 @@ void initializesymtab(void)
           symtab[i].label[0] = '\0';
      }
 
+     /* Install the keywords in the name table and
+               set their attributes to keyword */
      for  (i = 0;  i < NUMKEYWORDS;  i++)    {
           installname(keystring[i], &nameindex);
           setattrib(stkeyword, i, nameindex);
      }
 
+     /* Install the operators in the name table and
+               set their attributes to operator */
      for  (i = NUMKEYWORDS; i < NUMTOKENS;  i++)  {
           installname(keystring[i],&nameindex);
           setattrib(stoperator, i, nameindex);
@@ -92,10 +94,13 @@ void initializesymtab(void)
      printf("all initiallized\n");
 }
 
+/*
+ * DumpSymbolTable() -   Prints out the basic symbol table
+ *             information, including the name and token class
+ */
 void dumpsymboltable(void)
 {
      int  i, j;
-     char printstring[MAXLINE];
 
      printf("SYMBOL TABLE DUMP\n-----------------\n\n");
      printf("                   Token       Symbol     Data");
@@ -109,7 +114,6 @@ void dumpsymboltable(void)
 	  if (i%10 == 9) getchar();
           printf("%5d\t",i);
           printlexeme(i);
-
           if (nametable[symtab[i].thisname].strlength < 11)
                for (j = 0;
                          j < 11
@@ -117,7 +121,7 @@ void dumpsymboltable(void)
                          j++)
                     putchar(' ');
           else
-               printf("\n          ");                           
+          printf("\n          ");                           
 
           printf("%s  ",tokclstring[symtab[i].tok_class]);
 
@@ -175,12 +179,10 @@ void dumpsymboltable2(void)
         }
 }
 
-
 enum boolean installname(char string[], int *tabindex)
 {
-     int  i, code, lastcode, length, nameindex;
-
-     length = strlen(string);
+     int  i, code, length, nameindex;
+     length = (int)strlen(string);
      if (ispresent(string, length, &code, &nameindex)) {
           if (nametable[nameindex].symtabptr == -1)    {
                *tabindex = installattrib(nameindex);
@@ -191,7 +193,6 @@ enum boolean installname(char string[], int *tabindex)
                return(YES);
           }
      }
-    
      nametable[nameindex = namtablen++].strstart = strtablen;
      nametable[nameindex].strlength = length;
 
@@ -207,7 +208,7 @@ enum boolean installname(char string[], int *tabindex)
 
 int  installattrib(int nameindex)
 {
-     int  i, tabindex;
+     int  tabindex;
 
      tabindex = nametable[nameindex].symtabptr = symtablen++;
      symtab[tabindex].thisname = nameindex;
@@ -222,7 +223,6 @@ enum boolean   ispresent(char string[], int length, int *code,
                                    int *nameindex)
 {
      int  found = NO, oldnameindex, j, k;
-
      oldnameindex = -1;
 
      *code = hashcode(string, length);
@@ -239,6 +239,7 @@ enum boolean   ispresent(char string[], int length, int *code,
                found = YES;
 
      }
+
      if (found)     
           *nameindex = oldnameindex;
 
@@ -271,8 +272,7 @@ void setattrib(int symbol, int token, int tabindex)
      else
           symtab[tabindex].dataclass = dtunknown;
 
-     if (tokenclass(tabindex) == tokidentifier
-                              && thisproc.proc != -1)
+    if (tokenclass(tabindex) == tokidentifier && thisproc.proc != -1) {
           if (thisproc.sstart == -1)    {
                thisproc.sstart = tabindex;
                      thisproc.snext = tabindex;
@@ -281,6 +281,7 @@ void setattrib(int symbol, int token, int tabindex)
                symtab[thisproc.snext].scopenext = tabindex;
                     thisproc.snext = tabindex;
           }
+    }
 
 }
 
@@ -292,7 +293,7 @@ int  openscope(int tabindex)
      nameindex = symtab[tabindex].thisname;
      newtabindex = installattrib(nameindex);
      setattrib(stunknown, tokidentifier, newtabindex);
-        symtab[newtabindex].outerscope = tabindex;
+     symtab[newtabindex].outerscope = tabindex;
      return(newtabindex);
 }
 
@@ -447,10 +448,9 @@ void	getlabel(int tabindex, char *varlabel)
 
 void	makelabel(int tabindex, char *label)
 {
-	int		i, j, k, m, n, ivalue;
-        float		fvalue;
+	int		i, j, k;
 	char		indexstr[5];
-	enum symboltype thissymbol;
+
     label[0] = '\0';
 	switch (symclass(tabindex))	{
 	  case stliteral:
@@ -480,35 +480,31 @@ void	makelabel(int tabindex, char *label)
                 sprintf(indexstr, "%d", tabindex);
 				strcat(label, indexstr);
 				break;
-          case stprogram:
+      case stprogram:
 	  case stvariable:	
 	  case stparameter:
 	  case stprocedure:
 	  	i = symtab[tabindex].thisname;
 
-		for  (k = 0, j = nametable[i].strstart;
-			j < nametable[i].strstart+nametable[i].strlength
-	       				&& j < nametable[i].strstart+5;
-		    		j++, k++)
+		for (k = 0, j = nametable[i].strstart; j < nametable[i].strstart+nametable[i].strlength && j < nametable[i].strstart+5; j++, k++)
 			label[k] = stringtable[j];
 		label[k] = '\0';
-                if (strlen(label) >= 5)	{
+        if (strlen(label) >= 5)	{
 			//itoa(tabindex, indexstr, 10);
             sprintf(indexstr, "%d", tabindex);
 			strcat(label, indexstr);
-                }
+        }
+        
+        default: break;
 	  }
 	  strcpy(symtab[tabindex].label, label);
+          //printf("Tabindex is %d\n", tabindex);
 }
 
 
 void	paramlabel(int tabindex, char *label, int *bytecount)
 {
-	int		i, j, k, m, n, ivalue;
-        float		fvalue;
-	char		indexstr[5];
-	enum symboltype thissymbol;
-
+	char indexstr[5];
 	if (*bytecount < 0)	{
         	if (data_class(tabindex) == dtinteger)
 			strcpy(label, "[bp");
