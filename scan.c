@@ -97,9 +97,7 @@ enum tokentype	scanword(char c, int *tabindex, FILE *fp)
 	char	tokenstring[TOKENSTRINGLENGTH];
 	int	i = 0;
 
-	for (tokenstring[i++] = c;
-		(c = gettc(fp)) != EOF && (isalpha(c) || isdigit(c));
-				)   
+	for (tokenstring[i++] = c; (c = gettc(fp)) != EOF && (isalpha(c) || isdigit(c));)
 		tokenstring[i++] = c;
 	tokenstring[i] ='\0';
 	ungettc(c, fp);
@@ -124,9 +122,7 @@ enum tokentype	scannum(char c, int *tabindex, FILE *fp)
 
 	if (c == '.')	{
 		isitreal = YES;
-		for  (tokenstring[i++] = c;
-				(c = gettc(fp)) != EOF && isdigit(c);
-				)
+		for  (tokenstring[i++] = c; (c = gettc(fp)) != EOF && isdigit(c); )
 			tokenstring[i++] = c;
 	}
 	tokenstring[i] = '\0';

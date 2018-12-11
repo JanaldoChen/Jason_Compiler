@@ -1,9 +1,7 @@
 #include	<stdio.h>
 
-#include	"scan.h"
-#include	"quad.h"
-
-
+#include "scan.h"
+#include "quad.h"
 
 #define	MAXPARSESTACK	1000
 #define	MAXACTIONSTACK	1000
@@ -307,13 +305,6 @@ struct prodindexrec	{
 	int	prstart, prlength;
 };
 
-/*
- *	The index to the productions array, showing the
- *	starting position of the production and the number of items
- *	on its right-hand side. The first item is a dummy to get past the
- *	zeroth element of the array and any other second-entries of 0
- *	indicate an epsilon production.
- */
 const struct prodindexrec	prodindex[]	=	{
 		  {0, 0},   {0, 4},   {4, 4},   {8, 3},  {11, 0},  {11, 2},
 		 {13, 2},  {15, 0},  {15, 3},  {18, 2},  {20, 2},  {22, 3},
@@ -432,23 +423,47 @@ int	currentlevel = 1, tabindex, oldtabindex, numops,
 
 int	main(int argc, char *argv[])
 {
-	char	filename[FILENAMELEN];
+	char filename[FILENAMELEN];
 	int	numcodes;
 
 	initializesymtab();
 	ifp = openfile(argc, argv, filename);
+    //ifp = fopen("Jason_sample.jsn", "r");
+    //The scanner result
     printf("lexeme    token_class   linenum\n");
     printf("_______________________________\n");
 	thistoken = gettoken(ifp, &tabindex);
     printlexeme(tabindex);
     printf("     %s ", tokclstring[thistoken]);
     printf("%d\n", linenum);
+    
 	parse();
-	dumpsymboltable();
+    printf("\n");
+    //The  intermediate code before optimization
+    printf("The  intermediate code before optimization\n");
+    printf("------------------------------------------\n");
+    printintcode();
+    printf("------------------------------------------\n");
+    printf("\n");
+    //Code optimization
 	intpeephole();
 	numcodes = intglobal();
+    
+    //The  intermediate code after optimization
+    printf("The  intermediate code after optimization\n");
+    printf("-----------------------------------------\n");
 	printintcode();
+    printf("-----------------------------------------\n");
+    printf("\n");
+    //The quadruples
+    printf("The  quadruples\n");
+    printf("------------------------\n");
     printintcode2();
+    printf("------------------------\n");
+    printf("\n");
+    //The symbol table
+    dumpsymboltable();
+    
 	return(0);
 }
 
@@ -508,7 +523,7 @@ struct parsenoderec	*getparsenode(enum termtagtype termtag, int info)
 void processnonterm(struct parsenoderec *thisnode)
 {
 	struct parsenoderec	*p;
-	int			prodnum, i;
+	int	prodnum, i;
 
 	currentlevel = thisnode -> level +1;
 	if ((prodnum = prodtable[thisnode -> ParseItem][thistoken]) == 0){
@@ -518,18 +533,14 @@ void processnonterm(struct parsenoderec *thisnode)
         }
 
 	if (prodindex[prodnum].prlength != 0)	{
-		i = prodindex[prodnum].prstart
-			+ prodindex[prodnum].prlength - 1;
-		p = getparsenode(prodarray[i].PrTermOrNonterm,
-				prodarray[i].PrParseItem);
+		i = prodindex[prodnum].prstart + prodindex[prodnum].prlength - 1;
+		p = getparsenode(prodarray[i].PrTermOrNonterm, prodarray[i].PrParseItem);
 		parsepush(p);
         	
-		for (i = prodindex[prodnum].prstart
-					+ prodindex[prodnum].prlength - 2;
+		for (i = prodindex[prodnum].prstart + prodindex[prodnum].prlength - 2;
 				i >= prodindex[prodnum].prstart;  --i)	{
-			p = getparsenode(prodarray[i].PrTermOrNonterm,
-				prodarray[i].PrParseItem);
-                	parsepush(p);
+			p = getparsenode(prodarray[i].PrTermOrNonterm, prodarray[i].PrParseItem);
+            parsepush(p);
 		}
 	}
 
@@ -620,27 +631,27 @@ void	AddProcName(void)
 			error("Variable redeclared as procedure", linenum);
     }
 	installdatatype(oldtabindex, stprocedure, dtprocedure);
-        setproc(thisproc.proc, oldtabindex);
+    setproc(thisproc.proc, oldtabindex);
 	procpush(thisproc);
-        thisproc = initprocentry(oldtabindex);
+    thisproc = initprocentry(oldtabindex);
 }
 
 void	StartBlock(void)
 {
 	struct addressrec	proc;
 	proc = setaddress(opnaddr, thisproc.proc);
-        genquad(oplabel,proc, no_op, no_op); 
+    genquad(oplabel,proc, no_op, no_op);
 }
 
 void	EndBlock(void)
 {
-        genquad(opreturn, no_op, no_op, no_op);
+    genquad(opreturn, no_op, no_op, no_op);
 }
 
 void	CloseProc(void)
 {
 	closescope();
-        thisproc = procpop();
+    thisproc = procpop();
 }
 
 void	SetParamLink(void)
@@ -666,8 +677,8 @@ void 	DeclParam(void)
 
 	installdatatype(oldtabindex, stparameter, paramtype);
 	setivalue(paramlink, oldtabindex);
-        setproc(thisproc.proc, oldtabindex);
-        paramlink = oldtabindex;
+    setproc(thisproc.proc, oldtabindex);
+    paramlink = oldtabindex;
 
 	
 }
@@ -755,7 +766,7 @@ void	CalcExpression(void)
 {
 	enum tokentype		tokoptor, tokopnd1, tokopnd2;
 	enum optype		optor = opnull;
-        struct addressrec	op1, op2, op3;
+    struct addressrec	op1, op2, op3;
 
 	tokopnd2 = actionpop();
 	tokoptor = actionpop();
@@ -769,7 +780,7 @@ void	CalcExpression(void)
 	}
 
 	op2 = getaddress(tokopnd1);
-        op3 = getaddress(tokopnd2);
+    op3 = getaddress(tokopnd2);
 
 	op1 = GenArithQuad(op2, optor, op3);	
 	actionpush(op1.opnd);
@@ -777,7 +788,7 @@ void	CalcExpression(void)
     didcalculation = YES;
 }
 
-void	GenAssn(void)
+void GenAssn(void)
 {
 	struct addressrec	op1, op2, op3;
 	op2 = getaddress(actionpop());
@@ -802,7 +813,7 @@ void	GenAssn(void)
   	didcalculation = NO;
 }
 
-int		foldconstants(enum optype intopcode, struct addressrec a,
+int	foldconstants(enum optype intopcode, struct addressrec a,
 				struct addressrec b, struct addressrec c)
 {
 	int	nextop;
@@ -815,7 +826,7 @@ int		foldconstants(enum optype intopcode, struct addressrec a,
         return(nextop);
 }
 
-int		foldrconstants(enum optype intopcode, struct addressrec a,
+int	foldrconstants(enum optype intopcode, struct addressrec a,
 				struct addressrec b, struct addressrec c)
 {
 	char	valuestring[10];
@@ -908,7 +919,7 @@ void	EvalCondition(void)
 	op2 = getaddress(actionpop());
 	op1 = GenArithQuad(op2, opsub, op3);
 	actionpush(op1.opnd);
-        actionpush(tokoptor);
+    actionpush(tokoptor);
 }
 
 void	StartIf(void)
@@ -927,7 +938,7 @@ void	StartIf(void)
 	}
 	addr1 = gettemplabel();
 	nextop = genquad(otype, operand, addr1, no_op);
-        actionpush(addr1.opnd);
+    actionpush(addr1.opnd);
 
 
 }
@@ -949,9 +960,9 @@ void	FinishIf(void)
 {
 	struct addressrec	addr1;
 
-        addr1 = setaddress(opnaddr,  actionpop());
+    addr1 = setaddress(opnaddr,  actionpop());
 	nextop = genquad(oplabel, addr1, no_op, no_op);
-        setivalue(addr1.opnd, nextop);
+    setivalue(addr1.opnd, nextop);
 
 }
 
@@ -1122,7 +1133,7 @@ int		actionpop(void)
 	return(ac.actionitem[--ac.actiontop]);
 }
 
-void		actionpush(int x)
+void actionpush(int x)
 {
 	if (ac.actiontop == MAXACTIONSTACK)	{
 		printf("Actions stack overflow\n");
@@ -1131,12 +1142,12 @@ void		actionpush(int x)
 	ac.actionitem[ac.actiontop++] = x;
 }
 
-enum logical    actionempty(void)
+enum logical  actionempty(void)
 {
 	return(ac.actiontop == 0);
 }
 
-void		initactionstack(void)
+void initactionstack(void)
 {
 	ac.actiontop = 0;
 
@@ -1157,7 +1168,7 @@ struct parsenoderec	*parsepop(void)
 	return(pa.parsptr[--pa.parsetop]);
 }
 
-void	parsepush(struct parsenoderec *x)
+void parsepush(struct parsenoderec *x)
 {
 	if (pa.parsetop == MAXPARSESTACK)	{
 		printf("Parse stack overflow\n");

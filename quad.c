@@ -25,11 +25,11 @@ int	zeromult1(int i);
 int	zeromult2(int i);
 int	twotimes(int i);
 int	times2(int i);
-float	getvalue(int tabindex);
+float getvalue(int tabindex);
 int	insamebb(int j);
 int	copyprop(int i, int j);
 int	codeappears(int i, int j);
-void	packcode(void);
+void packcode(void);
 
 struct addressrec setaddress(enum operandtype otype, int tabindex)
 {
@@ -84,9 +84,9 @@ int	genquad(enum optype intopcode, struct addressrec a,
 {
 	intcode[numcodes].opcode = intopcode;
 	intcode[numcodes].op1.opndtype = a.opndtype;
-        intcode[numcodes].op1.opnd = a.opnd;
+    intcode[numcodes].op1.opnd = a.opnd;
 	intcode[numcodes].op2 = b;
-        intcode[numcodes++].op3 = c;
+    intcode[numcodes++].op3 = c;
 	return(numcodes-1);
 }
 
