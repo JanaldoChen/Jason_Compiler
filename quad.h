@@ -2,21 +2,21 @@
 #include	"symbol.h"
 
 enum optype	{opnull,opadd, opsub, opneg, opmult, opdiv, opassn,
-		oparg, opjump, opifposzjump, opifposjump, opifnegzjump,
-		opifnegjump, opifzjump, opifnzjump, oplabel, opfunc,
-		opproc,	opread, opwrite, opreturn
+    oparg, opjump, opifposzjump, opifposjump, opifnegzjump,
+    opifnegjump, opifzjump, opifnzjump, oplabel, opfunc,
+    opproc,	opread, opwrite, opreturn
 };
 
 enum operandtype {opnvar, opntempvar, opnconst, opnaddr, opnnull };
 
 struct addressrec	{
-	enum operandtype opndtype;
+    enum operandtype opndtype;
     int	opnd;
 };
 
 struct quadtype	{
-	enum optype		opcode;
-	struct addressrec	op1, op2, op3;
+    enum optype		opcode;
+    struct addressrec	op1, op2, op3;
 };
 
 
@@ -25,7 +25,7 @@ struct addressrec	gettempvar(enum datatype otype);
 struct addressrec 	gettemplabel(void);
 
 int		genquad(enum optype intopcode, struct addressrec a,
-				struct addressrec b, struct addressrec c);
+                struct addressrec b, struct addressrec c);
 
 void		permtarget(struct addressrec a);
 void		printintcode(void);

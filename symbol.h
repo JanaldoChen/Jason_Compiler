@@ -19,52 +19,52 @@
 enum boolean {NO, YES};
 
 enum tokentype {tokbegin, tokcall, tokdeclare, tokdo, tokelse, tokend,
-          tokendif, tokenduntil,  tokendwhile, tokif, tokinteger,
-          tokparameters, tokprocedure, tokprogram, tokread,
-          tokreal, tokset, tokthen, tokuntil, tokwhile, tokwrite,
-          tokstar, tokplus, tokminus, tokslash, tokequals,
-          toksemicolon, tokcomma, tokperiod, tokgreater, tokless,
-          toknotequal, tokopenparen, tokcloseparen, tokfloat,
-          tokidentifier, tokconstant, tokerror, tokeof
+    tokendif, tokenduntil,  tokendwhile, tokif, tokinteger,
+    tokparameters, tokprocedure, tokprogram, tokread,
+    tokreal, tokset, tokthen, tokuntil, tokwhile, tokwrite,
+    tokstar, tokplus, tokminus, tokslash, tokequals,
+    toksemicolon, tokcomma, tokperiod, tokgreater, tokless,
+    toknotequal, tokopenparen, tokcloseparen, tokfloat,
+    tokidentifier, tokconstant, tokerror, tokeof
 };
 
 enum symboltype {stunknown, stkeyword, stprogram,
-	  stparameter, stvariable, sttempvar,
-          stconstant, stenum, ststruct, stunion, stprocedure,
-          stfunction, stlabel, stliteral, stoperator
+    stparameter, stvariable, sttempvar,
+    stconstant, stenum, ststruct, stunion, stprocedure,
+    stfunction, stlabel, stliteral, stoperator
 };
 
 enum datatype  {dtunknown, dtnone, dtprogram, dtprocedure,
-          dtinteger, dtreal
+    dtinteger, dtreal
 };
 
 struct nametabtype  {
-     int strstart;
-     int strlength;
-     int symtabptr;
-     int nextname;
+    int strstart;
+    int strlength;
+    int symtabptr;
+    int nextname;
 }; 
 
 enum tagtype   {tint, treal};
 union valtype  {
-     int ival;
-     float rval;
+    int ival;
+    float rval;
 };
 
 struct valrec  {
-     enum tagtype tag;
-     union valtype val;
+    enum tagtype tag;
+    union valtype val;
 };
 
 struct symtabtype   {
-     enum symboltype    symtype;
-     enum tokentype     tok_class;
-     enum datatype      dataclass;
-     int                owningprocedure;
-     int                thisname;
-     int                outerscope, scopenext;
-     struct valrec	value;
-     char		label[LABELSIZE];
+    enum symboltype    symtype;
+    enum tokentype     tok_class;
+    enum datatype      dataclass;
+    int                owningprocedure;
+    int                thisname;
+    int                outerscope, scopenext;
+    struct valrec	value;
+    char		label[LABELSIZE];
 };
 
 void      initializesymtab(void);
@@ -75,7 +75,7 @@ int            installattrib(int nameindex);
 enum boolean   installname(char string[], int *tabindex);
 void           setattrib(int symbol, int token, int tabindex);
 void           installdatatype(int tabindex,
-                    enum symboltype stype, enum datatype dclass);
+                               enum symboltype stype, enum datatype dclass);
 
 int	openscope(int tabindex);
 void	closescope(void);
@@ -104,13 +104,13 @@ enum logical        {false, true};
 #define        MAXSTACK  100
 
 typedef struct {
-     int  proc;
-     int  sstart, snext;
+    int  proc;
+    int  sstart, snext;
 } procstackitem;
 
 typedef   struct    {
-     int            top;
-     procstackitem  item[MAXSTACK];
+    int            top;
+    procstackitem  item[MAXSTACK];
 }    procstack;
 
 procstackitem  procpop(void);
