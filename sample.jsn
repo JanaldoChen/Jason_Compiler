@@ -1,0 +1,52 @@
+PROGRAM Fib;
+{ Calculates the result of a basic formula Illustrates the use of procedures in JASON }
+	DECLARE
+    INTEGER n;
+    INTEGER ans;
+
+	PROCEDURE F;
+		PARAMETERS
+		    INTEGER n;
+        DECLARE
+            INTEGER a;
+            INTEGER b;
+            INTEGER c;
+
+		BEGIN
+            SET a = 1;
+            SET b = 1;
+            SET n = n - 2;
+            WHILE n > 0 DO
+                SET c = a + b;
+                WRITE c;
+                SET a = b;
+                SET b = c;
+                SET n = n - 1
+            ENDWHILE
+        END;
+
+	{Main program}
+	BEGIN
+		READ n;
+        IF n < 3 THEN
+            IF n > 0 THEN
+                SET ans = 1;
+                WRITE ans
+            ENDIF;
+            IF n > 1 THEN
+                SET ans = 1;
+                WRITE ans
+            ENDIF;
+        ELSE
+            IF n > 0 THEN
+                SET ans = 1;
+                WRITE ans
+            ENDIF;
+            IF n > 1 THEN
+                SET ans = 1;
+                WRITE ans
+            ENDIF;
+            CALL F(n);
+        ENDIF;
+
+	END.
