@@ -16,7 +16,7 @@ make
 ### Step 3
 使用Jason编译器编译源文件 sample.jsn, 生成汇编文件sample.asm.
 ```
-./Jason sample
+./Jason ../sample
 ```
 ### Step 4
 编译汇编代码, 生成可执行文件(建议使用DOSBox + masm)
