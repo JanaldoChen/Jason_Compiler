@@ -1,5 +1,5 @@
 # Jason_Compiler
-一个C语言实现的类ALOGO的Jason(Just Another Sample Original Notion)语言编译器.
+一个C语言实现的类ALGOL的Jason(Just Another Sample Original Notion)语言编译器.
 ## 运行方法
 ### Step 1
 新建build文件夹(如果存在build文件, 可以尝试直接进入build文件目录下进行Step 3, 若不能正常运行, 可以删除build文件夹, 按如下方式重新编译)
