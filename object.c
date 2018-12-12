@@ -64,6 +64,11 @@ void    writeobject(char name[], int numcodes)
 {
     char    filename[FILENAMELENGTH];
     
+    int i, len = (int)strlen(name);
+
+    for( i = 0; i < len; i++)
+        if(name[i] == '.') break;
+    name[i] = '\0';
     strcpy(filename, name);
     strcat(filename, ".asm");
     

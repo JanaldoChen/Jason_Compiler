@@ -196,9 +196,6 @@ f:
 ; a := 1
          mov       ax, 1
          mov       word ptr [bp-2], ax
-; a := a
-         mov       ax, word ptr [bp-2]
-         mov       word ptr [bp-2], ax
 ; b := 1
          mov       ax, 1
          mov       word ptr [bp-4], ax
@@ -223,7 +220,7 @@ Jump9:
          mov       word ptr [bp+2], ax
 Jump10:
 
-_loop47:
+_loop46:
 
 ; temp_0 := n
          mov       ax, word ptr [bp+2]
@@ -261,8 +258,8 @@ Jump12:
          mov       word ptr [bp+2], ax
 Jump13:
 
-; goto _loop47
-         jmp        _loop47
+; goto _loop46
+         jmp        _loop46
 
 _loop48:
 

@@ -33,7 +33,7 @@ FILE *openfile(int argc, char *argv[], char name[])
             exit(1);
     }
     strcpy(filename, name);
-    strcat(filename, ".jsn");
+//  strcat(filename, ".jsn");
     
     if ((ifp = fopen(filename, "r")) == NULL)	{
         printf("Cannot open %s\n", filename);
