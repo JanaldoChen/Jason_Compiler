@@ -30,7 +30,7 @@ Jason ../sample.txt
 cd ..
 cp sample.asm masm/sample.asm
 ```
-* 打开DOSBox, 将工作环境映射到 masm/ 目录下
+* 打开DOSBox, 将工作环境映射到 masm/ 目录下(其中****表示存放 Jason/ 的路径)
 ```
 mount c ~/****/Jason/masm
 c:
