@@ -45,3 +45,4 @@ link sample.obj
 sample.exe
 ```
 运行结果
+![Result](Jason_sample_result.png)
