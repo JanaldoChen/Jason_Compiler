@@ -1,0 +1,12 @@
+ Assembling: Temp.asm
+Microsoft(R) Windows DOS
+(C)Copyright Microsoft Corp 1990-2001.
+
+Microsoft (R) Segmented Executable Linker  Version 5.31.009 Jul 13 1992
+Copyright (C) Microsoft Corp 1984-1992.  All rights reserved.
+
+Object Modules [.obj]: Temp.obj/t 
+Run File [Temp.com]: "2423412234234234234.com"
+List File [nul.map]: NUL
+Libraries [.lib]: 
+Definitions File [nul.def]: 
