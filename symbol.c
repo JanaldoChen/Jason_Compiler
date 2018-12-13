@@ -73,15 +73,12 @@ void initializesymtab(void)
         symtab[i].label[0] = '\0';
     }
     
-    /* Install the keywords in the name table and
-     set their attributes to keyword */
+
     for  (i = 0;  i < NUMKEYWORDS;  i++)    {
         installname(keystring[i], &nameindex);
         setattrib(stkeyword, i, nameindex);
     }
     
-    /* Install the operators in the name table and
-     set their attributes to operator */
     for  (i = NUMKEYWORDS; i < NUMTOKENS;  i++)  {
         installname(keystring[i],&nameindex);
         setattrib(stoperator, i, nameindex);

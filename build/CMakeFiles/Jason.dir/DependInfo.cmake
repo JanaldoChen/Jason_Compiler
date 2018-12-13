@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/Users/mac/Desktop/Jason/Jason.c" "/Users/mac/Desktop/Jason/build/CMakeFiles/Jason.dir/Jason.c.o"
-  "/Users/mac/Desktop/Jason/object.c" "/Users/mac/Desktop/Jason/build/CMakeFiles/Jason.dir/object.c.o"
-  "/Users/mac/Desktop/Jason/quad.c" "/Users/mac/Desktop/Jason/build/CMakeFiles/Jason.dir/quad.c.o"
-  "/Users/mac/Desktop/Jason/scan.c" "/Users/mac/Desktop/Jason/build/CMakeFiles/Jason.dir/scan.c.o"
-  "/Users/mac/Desktop/Jason/symbol.c" "/Users/mac/Desktop/Jason/build/CMakeFiles/Jason.dir/symbol.c.o"
+  "/Users/mac/Github/Jason/Jason.c" "/Users/mac/Github/Jason/build/CMakeFiles/Jason.dir/Jason.c.o"
+  "/Users/mac/Github/Jason/object.c" "/Users/mac/Github/Jason/build/CMakeFiles/Jason.dir/object.c.o"
+  "/Users/mac/Github/Jason/quad.c" "/Users/mac/Github/Jason/build/CMakeFiles/Jason.dir/quad.c.o"
+  "/Users/mac/Github/Jason/scan.c" "/Users/mac/Github/Jason/build/CMakeFiles/Jason.dir/scan.c.o"
+  "/Users/mac/Github/Jason/symbol.c" "/Users/mac/Github/Jason/build/CMakeFiles/Jason.dir/symbol.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 
