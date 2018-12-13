@@ -15,8 +15,13 @@ make
 ```
 ### Step 3
 使用Jason编译器编译源文件 sample.txt, 生成汇编文件sample.asm.
+#### mac用户
 ```
 ./Jason ../sample.txt
+```
+#### windows用户
+```
+Jason ../sample.txt
 ```
 ### Step 4
 编译汇编代码, 生成可执行文件(建议使用DOSBox + masm)
