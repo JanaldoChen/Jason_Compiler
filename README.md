@@ -44,5 +44,22 @@ link sample.obj
 ```
 sample.exe
 ```
-运行结果
-![Result](Jason_sample_result.png)
+* 运行结果
+```
+10
+1
+1
+2
+3
+5
+8
+13
+21
+34
+55
+```
+## 操作示例
+### Jason_compiler
+![Jason](Instructions/Jason.gif)
+### DOSBox
+![DOSBox](Instructions/DOSBox.gif)
