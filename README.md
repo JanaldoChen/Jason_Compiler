@@ -60,6 +60,6 @@ sample.exe
 ```
 ## 操作示例
 ### Jason_compiler
-![Jason](http://pjnlug6p5.bkt.clouddn.com/Jason.gif)
+![Jason](Instructions/Jason.gif)
 ### DOSBox
 ![DOSBox](Instructions/DOSBox.gif)
