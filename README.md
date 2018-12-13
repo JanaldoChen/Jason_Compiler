@@ -14,7 +14,7 @@ cmake ..
 make
 ```
 ### Step 3
-使用Jason编译器编译源文件 sample.txt, 生成汇编文件sample.asm.
+使用Jason编译器编译源文件 sample.txt, 生成汇编文件 sample.asm.
 #### mac用户
 ```
 ./Jason ../sample.txt
@@ -24,4 +24,24 @@ make
 Jason ../sample.txt
 ```
 ### Step 4
-编译汇编代码, 生成可执行文件(建议使用DOSBox + masm)
+编译汇编代码, 生成可执行文件(建议使用[DOSBox](https://www.dosbox.com/download.php?main=1) + masm)
+* 回到上一级 Jason/目录下, 将生成的汇编代码 sample.asm 拷贝到 masm/ 目录下
+```
+cd ..
+cp sample.asm masm/sample.asm
+```
+* 打开DOSBox, 将工作环境映射到 masm/ 目录下
+```
+mount c ~/****/Jason/masm
+c:
+```
+* 对汇编代码 sample.asm 进行编译、链接生成 sample.exe 可执行文件
+```
+masm sample.asm
+link sample.obj
+```
+* 运行程序, 样例代码功能是输入一个正整数n, 输出前n项fibonacci数
+```
+sample.exe
+```
+运行结果
