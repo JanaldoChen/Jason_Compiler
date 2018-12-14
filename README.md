@@ -14,7 +14,7 @@ cmake ..
 make
 ```
 ### Step 3
-使用Jason编译器编译源文件 sample.txt, 生成汇编文件 sample.asm.
+使用Jason编译器编译源文件 sample.txt, 生成汇编文件 sample.asm.编译成功会依次显示语法树、词法分析、优化前的中间代码、优化后的中间代码、四元式、符号表.(注意: 本程序采用一遍编译, 如果发生编译错误立即退出, 并给出第一处的错误报告)
 #### mac用户
 ```
 ./Jason ../sample.txt
