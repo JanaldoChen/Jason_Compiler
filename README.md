@@ -32,7 +32,7 @@ cp sample.asm masm/sample.asm
 ```
 * 打开DOSBox, 将工作环境映射到 masm/ 目录下(其中****表示存放 Jason/ 的路径)
 ```
-mount c ~/****/Jason/masm
+mount c ~/****/masm
 c:
 ```
 * 对汇编代码 sample.asm 进行编译、链接生成 sample.exe 可执行文件
