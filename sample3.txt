@@ -1,0 +1,47 @@
+PROGRAM CLcm;
+{ Calculates the result of a basic formula Illustrates the use of procedures in JASON }
+    DECLARE
+        INTEGER n;
+        INTEGER m;
+        INTEGER t;
+        INTEGER ans;
+
+    PROCEDURE lcm;
+        PARAMETERS
+            INTEGER n;
+            INTEGER m;
+        DECLARE
+            INTEGER t;
+            INTEGER u;
+            INTEGER p;
+            INTEGER q;
+        BEGIN
+            SET t = n * m;
+            SET ans = n * m;
+            SET u = n - 1;
+            WHILE t > u DO
+                SET p = t / n;
+                SET q = p * n;
+                IF q = t THEN
+                    SET p = t / m;
+                    SET q = p * m;
+                    IF q = t THEN
+                        SET ans = t;
+                    ENDIF;
+                ENDIF;
+                SET t = t - 1;
+            ENDWHILE;
+        END;
+
+    {Main program}
+    BEGIN
+        READ n;
+        READ m;
+        IF n < m THEN
+            SET t = n;
+            SET n = m;
+            SET m = t;
+        ENDIF;
+        CALL lcm(n, m);
+        WRITE ans;
+    END.

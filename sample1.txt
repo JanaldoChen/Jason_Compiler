@@ -1,0 +1,42 @@
+PROGRAM Prim;
+{ Calculates the result of a basic formula Illustrates the use of procedures in JASON }
+	DECLARE
+    INTEGER n;
+
+	PROCEDURE Pri;
+		PARAMETERS
+		    INTEGER n;
+        DECLARE
+            INTEGER m;
+            INTEGER x;
+            INTEGER y;
+            INTEGER z;
+            INTEGER f;
+		BEGIN
+            SET m = 2;
+            SET n = n + 1;
+            WHILE m < n DO
+                SET x = 2;
+                SET f = 1;
+                WHILE x < m DO
+                    SET y = 2;
+                    WHILE y < m DO
+                        SET z = x * y;
+                        IF z = m THEN SET f = 0;
+                        ENDIF;
+                        SET y = y + 1
+                    ENDWHILE;
+                    SET x = x + 1
+                ENDWHILE;
+                IF f = 1 THEN
+                    WRITE m;
+                ENDIF;
+                SET m = m + 1;
+            ENDWHILE;
+        END;
+
+	{Main program}
+	BEGIN
+		READ n;
+        CALL Pri(n);
+	END.

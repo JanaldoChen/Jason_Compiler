@@ -1,0 +1,47 @@
+PROGRAM CGcd;
+{ Calculates the result of a basic formula Illustrates the use of procedures in JASON }
+	DECLARE
+        INTEGER n;
+        INTEGER m;
+        INTEGER t;
+        INTEGER ans;
+
+	PROCEDURE gcd;
+		PARAMETERS
+		    INTEGER n;
+            INTEGER m;
+        DECLARE
+            INTEGER t;
+            INTEGER u;
+            INTEGER p;
+            INTEGER q;
+		BEGIN
+            SET t = 1;
+            SET ans = 1;
+            SET u = n + 1;
+            WHILE t < u DO
+                SET p = n / t;
+                SET q = p * t;
+                IF q = n THEN
+                    SET p = m / t;
+                    SET q = p * t;
+                    IF q = m THEN
+                        SET ans = t;
+                    ENDIF;
+                ENDIF;
+                SET t = t + 1;
+            ENDWHILE;
+        END;
+
+	{Main program}
+	BEGIN
+		READ n;
+        READ m;
+        IF n > m THEN
+            SET t = n;
+            SET n = m;
+            SET m = t;
+        ENDIF;
+        CALL gcd(n, m);
+        WRITE ans;
+	END.
